@@ -574,6 +574,14 @@ static void
 xfpm_manager_on_battery_changed_cb (XfpmPower *power, gboolean on_battery, XfpmManager *manager)
 {
   egg_idletime_alarm_reset_all (manager->priv->idle);
+
+  /*
+   * If we've already been idle for longer than the new power state's inactivity
+   * sleep timeout, the configured sleep mode will not be activated. Work around
+   * this by treating the change as user activity.
+   */
+  XFPM_DEBUG ("Resetting screensaver on battery state change");
+  xfce_screensaver_reset (manager->priv->screensaver);
 }
 
 static void
